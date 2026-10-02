@@ -22,6 +22,7 @@ body{font-size:14px;overflow:hidden}button,a,input,select{touch-action:manipulat
 
 
 .mobile-preview{padding:0;border:1px solid #bdcddd;border-radius:10px;max-width:calc(100vw - 22px);width:414px;color:#24425f;overflow:hidden}.mobile-preview::backdrop{background:#172e4680}.mobile-preview form{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;font-size:12px;background:#f3f6fa}.mobile-preview iframe{display:block;width:390px;max-width:100%;height:min(740px,78dvh);border:0;margin:0 auto}.mobile-preview .icon-btn{border:0}.mobile-preview[open]{display:block}@media(max-width:760px){.mobile-preview-tool{display:none!important}}@media print{.mobile-preview{display:none!important}}
+.mobile-help{display:none}@media(max-width:760px){.topbar{justify-content:space-between}.topbar .btn{min-height:44px}.mobile-help{display:inline-flex;align-items:center}}
 </style>
 </head>
 <body data-version="2026.10.02">
@@ -229,7 +230,7 @@ function initWorkspace(){
  const help=document.createElement('dialog');help.id='helpDialog';help.className='help-dialog';help.setAttribute('aria-labelledby','helpTitle');
  const groups=[...new Set(GUIDE_DATA.map(x=>x.group))];help.innerHTML=`<div class="help-header"><div><h2 id="helpTitle">操作說明與欄位資料來源</h2><small>DECK ENGINEERING · 2026.10.02</small></div><button class="icon-btn" id="closeHelp" aria-label="關閉操作說明">×</button></div><div class="help-body"><p class="help-intro">先選板型與材料 → 設定載重及每跨 L → 查看檢核與獨立試算 → 匯出計算書。所有數值以工程資料為準，預設值只是起始範例。</p><input class="help-search" id="helpSearch" type="search" placeholder="搜尋欄位，例如：跨度、I、衝擊、來源" aria-label="搜尋操作說明"><p><a class="help-download" href="DECK_操作說明與資料來源.docx" download>↓ 下載可編輯 Word 操作說明</a></p>${groups.map(g=>`<section class="help-section"><h3>${g}</h3><table><thead><tr><th>欄位與單位</th><th>填寫方式及範例</th><th>資料來源</th></tr></thead><tbody>${GUIDE_DATA.filter(x=>x.group===g).map(x=>`<tr class="help-row" data-help-id="${x.id}"><td>${x.name}<br><small>${x.unit}</small></td><td>${x.entry}</td><td>${x.source}</td></tr>`).join('')}</tbody></table></section>`).join('')}<h3>資料保存與手機使用</h3><p>手機使用底部四個頁籤切換；敏感度可用加減按鈕調整。儲存案例與自訂資料庫 JSON 是不同檔案，換裝置請分別備份。Word 計算書使用原計算 L，不採用拉霸試算值。</p></div>`;
  document.body.append(help);$('closeHelp').onclick=()=>help.close();$('helpSearch').oninput=e=>filterHelp(e.target.value);
- const b=document.createElement('button');b.className='tool help-float';b.id='helpBtn';b.textContent='？ 操作說明';b.onclick=()=>openHelp();document.querySelector('.ribbon').append(b);
+ const b=document.createElement('button');b.className='tool help-float';b.id='helpBtn';b.textContent='？ 操作說明';b.onclick=()=>openHelp();document.querySelector('.ribbon').append(b);const mobileHelp=document.createElement('button');mobileHelp.className='btn mobile-help';mobileHelp.textContent='? 說明';mobileHelp.setAttribute('aria-label','操作說明');mobileHelp.onclick=()=>openHelp();document.querySelector('.topbar .actions').prepend(mobileHelp);
  for(const x of GUIDE_DATA){const e=$(x.id);if(!e)continue;const field=e.closest('.field');if(!field||field.querySelector('.field-help'))continue;const b=document.createElement('button');b.type='button';b.className='field-help';b.textContent='ⓘ 定義與資料來源';b.onclick=()=>openHelp(x.id);field.append(b);}
  document.querySelectorAll('input[type="number"]').forEach(e=>e.setAttribute('inputmode','decimal'));
 }
